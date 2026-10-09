@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAXTIX - Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#000;color:#fff;padding-bottom:30px}
+.top{position:fixed;top:0;width:100%;background:#111;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;z-index:99;border-bottom:1px solid #222}
+.logo{color:#00e5ff;font-weight:bold}
+.profile-top{text-align:center;margin-top:65px;padding:20px;background:linear-gradient(180deg,#111 0%,#000 100%)}
+.avatar{width:90px;height:90px;border-radius:50%;border:3px solid #00e5ff;object-fit:cover}
+.username{font-weight:bold;font-size:18px;margin-top:10px}
+.bio{font-size:12px;color:#888;margin-top:4px}
+.follow-page{background:#111;margin:15px;border-radius:12px;padding:15px;border:1px solid #222;display:flex;justify-content:space-around;text-align:center}
+.follow-page b{font-size:18px;display:block;color:#00e5ff}
+.follow-page span{font-size:11px;color:#aaa}
+.stats{margin:15px;display:flex;justify-content:space-around;text-align:center;background:#111;padding:15px;border-radius:12px;border:1px solid #222}
+.stats b{font-size:16px;display:block}
+.stats span{font-size:11px;color:#888}
+.my-videos{margin:15px}
+.my-videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.my-videos-header h4{font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.grid div{height:110px;background:#111;border-radius:8px;position:relative;overflow:hidden;border:1px solid #222;display:flex;align-items:center;justify-content:center;font-size:11px}
+.grid div img{width:100%;height:100%;object-fit:cover}
+.grid div span{position:absolute;bottom:4px;left:4px;background:#000000aa;padding:2px 5px;border-radius:4px;font-size:10px}
+.menu-btn{text-align:right;padding:10px 15px}
+.menu-btn i{font-size:24px}
+.menu{margin:15px;background:#111;border-radius:12px;overflow:hidden;border:1px solid #222;display:none}
+.menu.show{display:block}
+.menu-item{padding:14px 15px;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.menu-item i{color:#00e5ff;margin-right:10px;width:20px}
+.menu-item:last-child{border:none}
+.sign-box{margin:15px;background:#111;padding:15px;border-radius:12px;border:1px solid #222}
+input,button{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0}
+input{background:#222;color:#fff}
+button{background:#00e5ff;color:#000;font-weight:bold}
+button.google{background:#fff;color:#000}
+button.phone{background:#00e5ff}
+.small{font-size:11px;color:#888;text-align:center;margin-top:8px}
+.verify-box{display:flex;gap:8px}
+.verify-box input{flex:1}
+.verify-box button{width:90px}
+.lang{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.lang span{background:#222;padding:6px 10px;border-radius:20px;font-size:11px;border:1px solid #333}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo"><i class="fas fa-user"></i> WAXTIX PROFILE</div>
+  <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> MENU</div>
+</div>
+
+<!-- TOP PROFILE -->
+<div class="profile-top">
+  <img class="avatar" src="https://via.placeholder.com/150?text=You" id="avatar" onclick="document.getElementById('avatarInput').click()">
+  <input type="file" id="avatarInput" hidden accept="image/*" onchange="changeAvatar(this)">
+  <div class="username" id="usernameDisplay">@hunter_the_beast</div>
+  <div class="bio">Waxtix Creator from Kigali, RW 🇷🇼</div>
+  <button style="width:120px;margin-top:10px;padding:8px;font-size:12px" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+</div>
+
+<!-- FOLLOW PAGE - Following and Followers and Views -->
+<div class="follow-page">
+  <div onclick="showList('following')"><b id="followingCount">1,248</b><span>Following</span></div>
+  <div onclick="showList('followers')"><b id="followersCount">342</b><span>Followers</span></div>
+  <div onclick="showList('views')"><b id="viewsCount">12.5k</b><span>Views</span></div>
+</div>
+
+<!-- My Video Upload + Following Followers Viewers -->
+<div class="stats">
+  <div><b id="statFollowing">1,248</b><span>Following</span></div>
+  <div><b id="statFollowers">342</b><span>Followers</span></div>
+  <div><b id="statViewers">12.5k</b><span>Viewers</span></div>
+</div>
+
+<div class="my-videos">
+  <div class="my-videos-header"><h4><i class="fas fa-video"></i> My Video Upload</h4><span style="font-size:12px;color:#00e5ff" onclick="alert('All videos')">See all ></span></div>
+  <div class="grid" id="myGrid">
+    <div><img src="https://via.placeholder.com/150/00e5ff/000?text=V1"><span>2:34</span></div>
+    <div><img src="https://via.placeholder.com/150/222/fff?text=V2"><span>6:58</span></div>
+    <div><img src="https://via.placeholder.com/150/333/fff?text=V3"><span>0:45</span></div>
+    <div><img src="https://via.placeholder.com/150/111/00e5ff?text=V4"><span>5:12</span></div>
+    <div style="background:#0a0a0a;border:2px dashed #00e5ff"><i class="fas fa-plus"></i></div>
+    <div style="background:#0a0a0a">Empty</div>
+  </div>
+</div>
+
+<!-- 4 LINE MENU - Manage, Language, Help, Settings -->
+<div class="menu" id="menu">
+  <div class="menu-item" onclick="openPage('manage')"><span><i class="fas fa-user-cog"></i> Manage account</span><i class="fas fa-chevron-right"></i></div>
+  <div class="menu-item" onclick="openPage('language')"><span><i class="fas fa-globe"></i> Change languages - All languages</span><i class="fas fa-chevron-right"></i></div>
+  <div class="menu-item" onclick="openPage('help')"><span><i class="fas fa-question-circle"></i> Help Center</span><i class="fas fa-chevron-right"></i></div>
+  <div class="menu-item" onclick="openPage('settings')"><span><i class="fas fa-cog"></i> Settings</span><i class="fas fa-chevron-right"></i></div>
+  <div class="menu-item" onclick="openPage('signin')" style="color:#00e5ff"><span><i class="fas fa-sign-in-alt"></i> Sign In / Sign Out</span><i class="fas fa-chevron-right"></i></div>
+</div>
+
+<!-- SIGN IN - Phone / Google / Email + Verify Code -->
+<div class="sign-box" id="signBox">
+  <h4 style="margin-bottom:10px"><i class="fas fa-sign-in-alt"></i> Sign in Waxtix</h4>
+
+  <button class="google" onclick="signGoogle()"><i class="fab fa-google"></i> Continue with Google</button>
+
+  <div style="text-align:center;margin:10px 0;color:#666;font-size:12px">OR</div>
+
+  <input type="tel" id="phone" placeholder="📱 Phone number - e.g 078...">
+  <div class="verify-box">
+    <input type="text" id="verifyCode" placeholder="Waxtix Verify Code">
+    <button onclick="sendCode()">Send Code</button>
+  </div>
+  <p class="small" id="codeSent" style="display:none;color:#00ff88">Code 6 digits sent to your phone! ✅</p>
+
+  <input type="email" id="email" placeholder="📧 Email - Google / Email">
+  <input type="password" id="password" placeholder="🔒 Password">
+
+  <button class="phone" onclick="verifyAndSignIn()">Verify & Sign In</button>
+  <button style="background:#222;color:#fff;margin-top:6px" onclick="signOut()">Sign Out</button>
+  <p class="small">Sign in with phone number or google or email. Verification code itandukanye kuri google na email ni phone number. Waxtix verify code.</p>
+</div>
+
+<!-- LANGUAGE PAGE (hidden) -->
+<div class="sign-box" id="langBox" style="display:none">
+  <h4><i class="fas fa-globe"></i> Change Language - All Languages Supported</h4>
+  <div class="lang">
+    <span onclick="setLang('Kinyarwanda')">🇷🇼 Kinyarwanda</span>
+    <span onclick="setLang('English')">🇬🇧 English</span>
+    <span onclick="setLang('Français')">🇫🇷 Français</span>
+    <span onclick="setLang('Swahili')">🇹🇿 Swahili</span>
+    <span onclick="setLang('Arabic')">🇸🇦 العربية</span>
+    <span onclick="setLang('Chinese')">🇨🇳 中文</span>
+    <span onclick="setLang('Spanish')">🇪🇸 Español</span>
+    <span onclick="setLang('All')">+ All 100+</span>
+  </div>
+  <button style="margin-top:12px" onclick="openPage('close')">Done</button>
+</div>
+
+<script>
+function toggleMenu(){
+  let m=document.getElementById('menu');
+  m.classList.toggle('show');
+}
+
+function openPage(type){
+  document.getElementById('menu').classList.remove('show');
+  if(type=='language'){
+    document.getElementById('langBox').style.display='block';
+    document.getElementById('signBox').style.display='none';
+    window.scrollTo(0,500);
+  } else if(type=='signin'){
+    document.getElementById('signBox').style.display='block';
+    document.getElementById('langBox').style.display='none';
+  } else if(type=='close'){
+    document.getElementById('langBox').style.display='none';
+    document.getElementById('signBox').style.display='block';
+  } else {
+    alert(type+' page - Irimo gukorwa! Manage account, Help Center, Settings zose ziri muri iyi Menu ya 4 lines');
+  }
+}
+
+function changeAvatar(input){
+  let file=input.files[0];
+  if(file) document.getElementById('avatar').src=URL.createObjectURL(file);
+}
+
+function editProfile(){
+  let newName=prompt('Andika username nshya:',document.getElementById('usernameDisplay').innerText);
+  if(newName) document.getElementById('usernameDisplay').innerText=newName;
+}
+
+function showList(type){
+  if(type=='followers') alert('Followers: 342 - List of people following you\n🔴 Live needs 500!');
+  else if(type=='following') alert('Following: 1,248 people');
+  else alert('Total Views: 12.5k views on your videos');
+}
+
+function sendCode(){
+  let phone=document.getElementById('phone').value;
+  if(!phone){alert('Andika phone number!');return}
+  document.getElementById('codeSent').style.display='block';
+  let code=Math.floor(100000+Math.random()*900000);
+  alert('Waxtix Verify Code yawe ni: '+code+' (Demo kuri A32)');
+  document.getElementById('verifyCode').value=code;
+}
+
+function signGoogle(){
+  alert('Google Sign In - Ihuza na Google account yawe kuri A32');
+  document.getElementById('usernameDisplay').innerText='@google_user';
+  document.getElementById('followersCount').innerText='0';
+}
+
+function verifyAndSignIn(){
+  let code=document.getElementById('verifyCode').value;
+  let phone=document.getElementById('phone').value;
+  let email=document.getElementById('email').value;
+  if(!code){alert('Andika Waxtix Verify Code!');return}
+  if(!phone &&!email){alert('Andika phone cyangwa email!');return}
+  alert('✅ Verified! Winjiye muri Waxtix nka '+ (phone || email));
+  document.getElementById('usernameDisplay').innerText='@'+(phone||email.split('@')[0]);
+  document.getElementById('followersCount').innerText=Math.floor(Math.random()*600);
+  document.getElementById('statFollowers').innerText=document.getElementById('followersCount').innerText;
+  checkLive();
+}
+
+function signOut(){
+  if(confirm('Urashaka gusohoka muri Waxtix?')) alert('Signed out!');
+}
+
+function setLang(lang){
+  alert('Language changed to: '+lang+' - Waxtix ihinduye ururimi! All languages supported');
+}
+
+function checkLive(){
+  let f=parseInt(document.getElementById('followersCount').innerText);
+  if(f>=500) alert('🎉 Ufite 500+ followers! Ushobora kujya Live ubu muri Upload page!');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAXTIX - Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#000;color:#fff}
+.top{position:fixed;top:0;width:100%;background:#111;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;z-index:99;border-bottom:1px solid #222}
+.logo{color:#00e5ff;font-weight:bold;font-size:22px;letter-spacing:1px}
+.top i{font-size:20px;margin-left:15px}
+.feed{margin-top:60px;padding-bottom:20px}
+.card{background:#111;margin:12px;border-radius:12px;overflow:hidden}
+.card video,.card img{width:100%;height:480px;object-fit:cover;background:#222}
+.info{padding:10px}
+.user{font-weight:bold;font-size:14px}
+.caption{font-size:13px;color:#ccc;margin-top:4px}
+.actions{display:flex;justify-content:space-between;padding:12px;border-top:1px solid #222}
+.act{text-align:center;flex:1}
+.act i{font-size:22px;display:block}
+.act span{font-size:11px;margin-top:4px;display:block;color:#aaa}
+.act.active i{color:#ff2d55}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo">WAXTIX</div>
+  <div>
+    <i class="fas fa-search" onclick="searchVideo()"></i>
+  </div>
+</div>
+
+<div class="feed" id="feed">
+
+  <!-- VIDEO 1 -->
+  <div class="card">
+    <video controls loop poster="https://via.placeholder.com/400x800/111/00e5ff?text=WAXTIX+VIDEO+1">
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    </video>
+    <div class="info">
+      <div class="user">@hunter_the_beast 🔥</div>
+      <div class="caption">First video kuri Waxtix #beast #rwanda</div>
+    </div>
+    <div class="actions">
+      <div class="act" onclick="like(this)"><i class="fas fa-heart"></i><span class="count">1.2k</span><span>Like</span></div>
+      <div class="act" onclick="comment(this)"><i class="fas fa-comment-dots"></i><span>340</span><span>Comment</span></div>
+      <div class="act" onclick="share(this)"><i class="fas fa-share"></i><span>Share</span></div>
+      <div class="act" onclick="downloadVideo(this)"><i class="fas fa-download"></i><span>Download</span></div>
+      <div class="act" onclick="follow(this)"><i class="fas fa-user-plus"></i><span>Follow</span></div>
+    </div>
+  </div>
+
+  <!-- IMAGE 2 -->
+  <div class="card">
+    <img src="https://via.placeholder.com/400x800/222/fff?text=Image+Post+Waxtix">
+    <div class="info">
+      <div class="user">@keza_waxtix</div>
+      <div class="caption">Photo y'umunsi muri Kigali 📸</div>
+    </div>
+    <div class="actions">
+      <div class="act" onclick="like(this)"><i class="fas fa-heart"></i><span class="count">892</span><span>Like</span></div>
+      <div class="act" onclick="comment(this)"><i class="fas fa-comment-dots"></i><span>56</span><span>Comment</span></div>
+      <div class="act" onclick="share(this)"><i class="fas fa-share"></i><span>Share</span></div>
+      <div class="act" onclick="downloadVideo(this)"><i class="fas fa-download"></i><span>Download</span></div>
+      <div class="act" onclick="follow(this)"><i class="fas fa-user-plus"></i><span>Follow</span></div>
+    </div>
+  </div>
+
+  <!-- VIDEO 3 -->
+  <div class="card">
+    <video controls loop poster="https://via.placeholder.com/400x800/000/00e5ff?text=VIDEO+3">
+      <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+    </video>
+    <div class="info">
+      <div class="user">@waxtix_official</div>
+      <div class="caption">Waxtix ni platform yawe nshya!</div>
+    </div>
+    <div class="actions">
+      <div class="act" onclick="like(this)"><i class="fas fa-heart"></i><span class="count">5k</span><span>Like</span></div>
+      <div class="act" onclick="comment(this)"><i class="fas fa-comment-dots"></i><span>1.1k</span><span>Comment</span></div>
+      <div class="act" onclick="share(this)"><i class="fas fa-share"></i><span>Share</span></div>
+      <div class="act" onclick="downloadVideo(this)"><i class="fas fa-download"></i><span>Download</span></div>
+      <div class="act" onclick="follow(this)"><i class="fas fa-user-plus"></i><span>Follow</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// LIKE
+function like(el){
+  el.classList.toggle('active');
+  let countEl = el.querySelector('.count');
+  if(countEl){
+    let n = parseInt(countEl.innerText);
+    if(el.classList.contains('active')) countEl.innerText = n+1;
+    else countEl.innerText = n-1;
+  }
+}
+// COMMENT
+function comment(el){
+  let c = prompt('Andika comment yawe:');
+  if(c) alert('Comment yawe: '+c+' - Yoherejwe!');
+}
+// SHARE
+function share(el){
+  if(navigator.share){
+    navigator.share({title:'Waxtix Video', text:'Reba iyi video kuri Waxtix!', url:window.location.href});
+  } else {
+    alert('Link copied! Share kuri WhatsApp / TikTok');
+  }
+}
+// DOWNLOAD
+function downloadVideo(el){
+  alert('Downloading... Video ibikwa muri Gallery ya A32 yawe');
+}
+// FOLLOW
+function follow(el){
+  let icon = el.querySelector('i');
+  let txt = el.querySelector('span:last-child');
+  if(txt.innerText=='Follow'){
+    txt.innerText='Following'; el.style.color='#00e5ff'; icon.className='fas fa-check';
+  } else {
+    txt.innerText='Follow'; el.style.color=''; icon.className='fas fa-user-plus';
+  }
+}
+// SEARCH hejuru iburyo
+function searchVideo(){
+  let q = prompt('Shakisha Video:');
+  if(q){
+    alert('Urimo gushakisha: '+q);
+    // hano ushobora kongeraho filter logic
+  }
+}
+</script>
+
+</body>
+</html>

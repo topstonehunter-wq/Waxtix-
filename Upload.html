@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAXTIX - Upload</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#000;color:#fff;padding-bottom:30px}
+.top{position:fixed;top:0;width:100%;background:#111;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;z-index:99;border-bottom:1px solid #222}
+.logo{color:#00e5ff;font-weight:bold;font-size:20px}
+.content{margin-top:65px;padding:15px}
+.upload-box{border:2px dashed #00e5ff;padding:30px;text-align:center;border-radius:14px;background:#0a0a0a;margin:15px 0}
+.upload-box i{font-size:50px;color:#00e5ff}
+.upload-box p{margin-top:10px;font-size:14px}
+.note{font-size:11px;color:#ff4444;text-align:center;margin:8px 0;font-weight:bold}
+.note2{font-size:11px;color:#888;text-align:center}
+.preview{background:#111;border-radius:12px;padding:10px;margin:15px 0;display:none;border:1px solid #222}
+.preview video,.preview img{width:100%;max-height:400px;border-radius:8px;background:#222}
+.edit-tools{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.edit-tools button{flex:1;min-width:80px;padding:10px;border-radius:8px;border:none;background:#222;color:#fff;font-size:12px}
+.edit-tools button i{display:block;font-size:18px;margin-bottom:4px}
+.main-btn{width:100%;padding:14px;border-radius:10px;border:none;font-weight:bold;margin:8px 0;font-size:14px}
+.btn-upload{background:#00e5ff;color:#000}
+.btn-edit{background:#222;color:#fff;border:1px solid #333}
+.go-live{margin-top:25px;background:linear-gradient(135deg,#1a0000,#330000);border:1px solid #ff0000;border-radius:12px;padding:15px;text-align:center}
+.go-live-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.live-badge{background:#ff0000;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.5}}
+.go-live p{font-size:12px;color:#aaa;margin:5px 0}
+.progress{width:100%;height:6px;background:#222;border-radius:10px;margin:10px 0;overflow:hidden}
+.progress-bar{height:100%;background:#00e5ff;width:0%;transition:0.5s}
+.followers-box{background:#111;padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin:15px 0;border:1px solid #222}
+input{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0;background:#222;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo"><i class="fas fa-upload"></i> WAXTIX UPLOAD</div>
+  <div><i class="fas fa-times" onclick="history.back()"></i></div>
+</div>
+
+<div class="content">
+
+  <p class="note">NB: Upload video have 7 minutes - Images only and edit video and image</p>
+
+  <!-- UPLOAD BOX -->
+  <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <p><b>Upload Video and Images Only</b></p>
+    <p style="font-size:12px;color:#888">Tap to select from Gallery - Galaxy A32</p>
+    <input type="file" id="fileInput" accept="video/*,image/*" hidden onchange="handleFile(this)">
+  </div>
+  <p class="note2">Supported: MP4, MOV, JPG, PNG - Max 7 minutes</p>
+
+  <!-- PREVIEW -->
+  <div class="preview" id="preview">
+    <div id="mediaPreview"></div>
+    <div style="margin-top:10px">
+      <input type="text" id="caption" placeholder="Add caption / title...">
+      <div id="videoInfo" style="font-size:12px;color:#00e5ff;margin:5px 0"></div>
+    </div>
+
+    <!-- EDIT TOOLS -->
+    <p style="font-size:13px;margin:12px 0 6px"><i class="fas fa-edit"></i> Edit Video and Image</p>
+    <div class="edit-tools">
+      <button onclick="editAction('trim')"><i class="fas fa-cut"></i>Trim</button>
+      <button onclick="editAction('filter')"><i class="fas fa-magic"></i>Filter</button>
+      <button onclick="editAction('crop')"><i class="fas fa-crop"></i>Crop</button>
+      <button onclick="editAction('text')"><i class="fas fa-font"></i>Text</button>
+      <button onclick="editAction('music')"><i class="fas fa-music"></i>Music</button>
+      <button onclick="editAction('speed')"><i class="fas fa-tachometer-alt"></i>Speed</button>
+    </div>
+
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <button class="main-btn btn-upload" onclick="uploadNow()"><i class="fas fa-cloud-upload-alt"></i> Upload Now</button>
+    <button class="main-btn btn-edit" onclick="resetFile()"><i class="fas fa-trash"></i> Remove</button>
+  </div>
+
+  <!-- FOLLOWERS CHECK -->
+  <div class="followers-box">
+    <div><i class="fas fa-users" style="color:#00e5ff"></i> Your Followers: <b id="followerCount">342</b> / 500</div>
+    <div style="font-size:11px;color:#888">Need 500 for Live</div>
+  </div>
+
+  <!-- GO LIVE -->
+  <div class="go-live">
+    <div class="go-live-top">
+      <b><i class="fas fa-broadcast-tower"></i> Go Live</b>
+      <span class="live-badge">LIVE</span>
+    </div>
+    <p>Umuntu agomba kujya live aruko afite 500 followers</p>
+    <p style="color:#ff6666;font-size:11px" id="liveStatus">🔒 Locked - You need 158 more followers</p>
+    <button class="main-btn" id="liveBtn" style="background:#333;color:#666" disabled onclick="goLive()"><i class="fas fa-video"></i> Start Live</button>
+  </div>
+
+  <!-- MY UPLOADS -->
+  <h4 style="margin:20px 0 10px">Recent Uploads</h4>
+  <div id="myUploads" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:#111;height:120px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid #222">No uploads yet</div>
+  </div>
+
+</div>
+
+<script>
+let currentFile=null;
+let duration=0;
+
+function handleFile(input){
+  let file=input.files[0];
+  if(!file) return;
+  currentFile=file;
+
+  let preview=document.getElementById('preview');
+  let mediaPrev=document.getElementById('mediaPreview');
+  let info=document.getElementById('videoInfo');
+  preview.style.display='block';
+
+  if(file.type.startsWith('video')){
+    let url=URL.createObjectURL(file);
+    mediaPrev.innerHTML='<video id="vPreview" controls src="'+url+'" style="width:100%" onloadedmetadata="checkDuration(this)"></video>';
+    info.innerHTML='Checking duration...';
+  } else {
+    mediaPrev.innerHTML='<img src="'+URL.createObjectURL(file)+'" style="width:100%">';
+    info.innerHTML='Image: '+file.name+' | '+ (file.size/1024/1024).toFixed(2)+' MB - OK for upload';
+  }
+  window.scrollTo(0,200);
+}
+
+function checkDuration(video){
+  duration=video.duration;
+  let info=document.getElementById('videoInfo');
+  let minutes=(duration/60).toFixed(2);
+  if(duration>420){ // 7 min = 420 sec
+    info.innerHTML='❌ Video is '+minutes+' min - TOO LONG! Max 7 minutes only. Please trim.';
+    info.style.color='#ff4444';
+  } else {
+    info.innerHTML='✅ Video: '+minutes+' min - OK! Under 7 minutes limit';
+    info.style.color='#00ff88';
+  }
+}
+
+function editAction(type){
+  if(!currentFile){alert('Banza uhitamo video cyangwa image!');return}
+  alert('Edit: '+type+' - Hafi! Muri Acode ushobora kongeraho filters, trim (cut to 7 min), crop, add text/music');
+  if(type=='trim' && duration>420){
+    alert('Trimming to 7 minutes... Video igabanyijwe!');
+    document.getElementById('videoInfo').innerHTML='✅ Trimmed to 6:58 - Now OK!';
+    document.getElementById('videoInfo').style.color='#00ff88';
+  }
+}
+
+function uploadNow(){
+  if(!currentFile){alert('Nta file wahisemo!');return}
+  if(duration>420){alert('Video irenze 7 minutes! Banza uyigabanye (Trim)');return}
+
+  let bar=document.getElementById('progressBar');
+  let w=0;
+  let interval=setInterval(()=>{
+    w+=10; bar.style.width=w+'%';
+    if(w>=100){
+      clearInterval(interval);
+      // Add to my uploads
+      let uploads=document.getElementById('myUploads');
+      uploads.innerHTML='<div style="background:#111;border-radius:8px;overflow:hidden;border:1px solid #00e5ff"><img src="'+ (currentFile.type.startsWith('video')?'https://via.placeholder.com/150x100/00e5ff/000?text=VIDEO':'') +'" style="width:100%;height:80px;object-fit:cover"><div style="padding:5px;font-size:11px">'+document.getElementById('caption').value+'</div></div>' + uploads.innerHTML;
+      alert('✅ Uploaded! Video/Image byoherejwe kuri Waxtix');
+      resetFile();
+      // Increase followers fake
+      let fc=document.getElementById('followerCount');
+      fc.innerText=parseInt(fc.innerText)+5;
+      checkLiveLock();
+    }
+  },200);
+}
+
+function resetFile(){
+  document.getElementById('preview').style.display='none';
+  document.getElementById('fileInput').value='';
+  document.getElementById('progressBar').style.width='0%';
+  currentFile=null;
+}
+
+function checkLiveLock(){
+  let count=parseInt(document.getElementById('followerCount').innerText);
+  let btn=document.getElementById('liveBtn');
+  let status=document.getElementById('liveStatus');
+  if(count>=500){
+    btn.disabled=false; btn.style.background='#ff0000'; btn.style.color='#fff';
+    status.innerHTML='✅ Unlocked! You can Go Live now'; status.style.color='#00ff88';
+  } else {
+    status.innerHTML='🔒 Locked - You need '+(500-count)+' more followers';
+  }
+}
+
+function goLive(){
+  let count=parseInt(document.getElementById('followerCount').innerText);
+  if(count<500){alert('Ntago wujuje 500 followers! Ufite '+count);return}
+  alert('🔴 LIVE STARTED! Ura live kuri Waxtix - Galaxy A32 camera iri gukora!');
+}
+
+checkLiveLock();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAXTIX - News</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#000;color:#fff;padding-bottom:80px}
+.top{position:fixed;top:0;width:100%;background:#111;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;z-index:99;border-bottom:1px solid #222}
+.logo{color:#00e5ff;font-weight:bold;font-size:20px}
+.news-feed{margin-top:65px;padding:10px}
+.card{background:#111;border-radius:12px;margin:12px 0;overflow:hidden;border:1px solid #222}
+.card-header{padding:12px;display:flex;justify-content:space-between;align-items:center}
+.card-header b{font-size:14px}
+.card-header span{font-size:11px;color:#888}
+.card-text{padding:0 12px 10px;font-size:13px;color:#ddd;line-height:18px}
+.card img,.card video{width:100%;max-height:350px;object-fit:cover;background:#222}
+.card-actions{display:flex;justify-content:space-around;padding:10px;border-top:1px solid #222;font-size:12px;color:#aaa}
+.add-btn{position:fixed;bottom:25px;right:20px;background:#00e5ff;color:#000;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 15px #00e5ff66;z-index:100}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000000ee;z-index:200;padding:20px}
+.modal-box{background:#111;border-radius:12px;padding:15px;margin-top:40px;border:1px solid #333}
+input,textarea,button{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0;background:#222;color:#fff}
+button{background:#00e5ff;color:#000;font-weight:bold}
+.upload-area{border:2px dashed #00e5ff;padding:20px;text-align:center;border-radius:10px;margin:10px 0}
+.note{font-size:11px;color:#888;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo"><i class="fas fa-newspaper"></i> WAXTIX NEWS</div>
+  <div><i class="fas fa-search"></i></div>
+</div>
+
+<div class="news-feed" id="newsFeed">
+
+  <!-- NEWS 1 - Text + Photo -->
+  <div class="card">
+    <div class="card-header"><b>Waxtix Official</b><span>2h ago</span></div>
+    <div class="card-text">Murakaza neza kuri Waxtix News! Aha niho muzasanga amakuru yose uko ameze. Wanditse amakuru ushyiramo Video cyangwa Photo. #WaxtixNews</div>
+    <img src="https://via.placeholder.com/400x250/111/00e5ff?text=News+Photo+1">
+    <div class="card-actions">
+      <span><i class="fas fa-heart"></i> 1.2k Like</span>
+      <span><i class="fas fa-comment"></i> 89 Comment</span>
+      <span><i class="fas fa-share"></i> Share</span>
+    </div>
+  </div>
+
+  <!-- NEWS 2 - Text + Video -->
+  <div class="card">
+    <div class="card-header"><b>Rwanda Tech Today</b><span>5h ago</span></div>
+    <div class="card-text">Platform nshya ya Waxtix yatangijwe i Kigali. Abakoresha bashobora gukora upload ya News gusa muri iyi page.</div>
+    <video controls poster="https://via.placeholder.com/400x250/222/fff?text=News+Video"><source src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+    <div class="card-actions">
+      <span><i class="fas fa-heart"></i> 3.4k</span>
+      <span><i class="fas fa-comment"></i> 210</span>
+      <span><i class="fas fa-share"></i> Share</span>
+    </div>
+  </div>
+
+  <!-- NEWS 3 - Text Only -->
+  <div class="card">
+    <div class="card-header"><b>@hunter_news</b><span>Yesterday</span></div>
+    <div class="card-text">Amakuru agezweho: Waxtix izaba ifite languages zose. Umuntu wese azabasha guhindura ururimi ashaka!</div>
+    <div class="card-actions">
+      <span><i class="fas fa-heart"></i> 567</span>
+      <span><i class="fas fa-comment"></i> 34</span>
+      <span><i class="fas fa-share"></i> Share</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- +ADD BUTTON -->
+<div class="add-btn" onclick="openModal()"><i class="fas fa-plus"></i></div>
+
+<!-- MODAL - EDIT / UPLOAD NEWS -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between"><h3>Upload News Only</h3><i class="fas fa-times" onclick="closeModal()" style="font-size:20px"></i></div>
+    <p class="note">Aha ugomba kuba upload news gusa (only) - nkuko biri muri PDF</p>
+
+    <textarea id="newsText" rows="4" placeholder="Andika amakuru uko azaba ameze..."></textarea>
+
+    <div class="upload-area" onclick="document.getElementById('mediaFile').click()">
+      <i class="fas fa-photo-video" style="font-size:30px;color:#00e5ff"></i>
+      <p style="font-size:13px;margin-top:8px">Shyiramo Video Cyangwa Photo</p>
+      <input type="file" id="mediaFile" accept="image/*,video/*" hidden onchange="previewMedia(this)">
+    </div>
+    <div id="previewMedia"></div>
+
+    <button onclick="publishNews()"><i class="fas fa-upload"></i> Upload News</button>
+    <button style="background:#222;color:#fff" onclick="closeModal()">Cancel / Edit</button>
+    <p class="note">Muri Add niho ukorera edit, upload news</p>
+  </div>
+</div>
+
+<script>
+function openModal(){document.getElementById('modal').style.display='block'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+
+function previewMedia(input){
+  let file=input.files[0];
+  let prev=document.getElementById('previewMedia');
+  if(file.type.startsWith('video')){
+    prev.innerHTML='<video controls src="'+URL.createObjectURL(file)+'" style="width:100%;border-radius:8px;margin-top:10px"></video>';
+  } else {
+    prev.innerHTML='<img src="'+URL.createObjectURL(file)+'" style="width:100%;border-radius:8px;margin-top:10px">';
+  }
+}
+
+function publishNews(){
+  let text=document.getElementById('newsText').value;
+  let media=document.getElementById('previewMedia').innerHTML;
+  if(!text){alert('Andika amakuru!');return}
+
+  let feed=document.getElementById('newsFeed');
+  let card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+    <div class="card-header"><b>You - News</b><span>Now</span></div>
+    <div class="card-text">${text}</div>
+    ${media}
+    <div class="card-actions">
+      <span><i class="fas fa-edit"></i> Edit</span>
+      <span><i class="fas fa-trash"></i> Delete</span>
+      <span><i class="fas fa-share"></i> Share</span>
+    </div>
+  `;
+  feed.prepend(card);
+  closeModal();
+  document.getElementById('newsText').value='';
+  document.getElementById('previewMedia').innerHTML='';
+  alert('News uploaded! ✅ - Only News page');
+}
+</script>
+
+</body>
+</html>

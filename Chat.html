@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAXTIX - Chat</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#000;color:#fff;display:flex;flex-direction:column;height:100vh}
+.top{position:fixed;top:0;width:100%;background:#111;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;z-index:99;border-bottom:1px solid #222}
+.logo{color:#00e5ff;font-weight:bold;font-size:20px}
+.content{margin-top:55px;display:flex;height:calc(100vh - 55px)}
+.sidebar{width:100%;background:#000;border-right:1px solid #222;overflow-y:auto}
+.sidebar.hidden{display:none}
+.chat-list-item{display:flex;align-items:center;padding:12px 15px;border-bottom:1px solid #111;cursor:pointer}
+.chat-list-item:hover{background:#111}
+.chat-list-item img{width:50px;height:50px;border-radius:50%;margin-right:12px;object-fit:cover}
+.chat-list-item.name{font-weight:bold;font-size:14px}
+.chat-list-item.last{font-size:12px;color:#888;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.chat-list-item.time{margin-left:auto;font-size:11px;color:#666}
+.badge{background:#00e5ff;color:#000;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:5px}
+.chat-area{flex:1;display:flex;flex-direction:column;background:#0a0a0a;width:100%;display:none}
+.chat-area.active{display:flex}
+.chat-header{padding:12px;background:#111;display:flex;align-items:center;border-bottom:1px solid #222}
+.chat-header img{width:40px;height:40px;border-radius:50%;margin-right:10px}
+.chat-header.actions{margin-left:auto}
+.chat-header.actions i{margin-left:15px;font-size:18px;color:#00e5ff}
+.messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:75%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:18px}
+.msg.me{align-self:flex-end;background:#00e5ff;color:#000;border-bottom-right-radius:4px}
+.msg.other{align-self:flex-start;background:#222;color:#fff;border-bottom-left-radius:4px}
+.msg img{width:100%;border-radius:10px;margin-top:6px;max-height:200px;object-fit:cover}
+.msg.time{font-size:10px;margin-top:4px;opacity:0.7;display:block}
+.input-area{padding:10px;background:#111;display:flex;align-items:center;gap:8px;border-top:1px solid #222}
+.input-area input{flex:1;padding:12px;border-radius:25px;border:none;background:#222;color:#fff;outline:none}
+.input-area button{width:42px;height:42px;border-radius:50%;border:none;background:#00e5ff;color:#000;display:flex;align-items:center;justify-content:center}
+.group-icon{background:linear-gradient(45deg,#00e5ff,#0088ff);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:12px}
+.tabs{display:flex;background:#111;border-bottom:1px solid #222}
+.tabs div{flex:1;text-align:center;padding:12px;font-size:13px;color:#888;border-bottom:2px solid transparent}
+.tabs div.active{color:#00e5ff;border-bottom-color:#00e5ff}
+.voice-recording{background:#ff0000!important;animation:pulse 1s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo"><i class="fas fa-comment-dots"></i> WAXTIX CHAT</div>
+  <div><i class="fas fa-video"></i><i class="fas fa-ellipsis-v" style="margin-left:15px"></i></div>
+</div>
+
+<div class="content">
+
+<!-- SIDEBAR - LIST -->
+<div class="sidebar" id="sidebar">
+  <div class="tabs">
+    <div class="active" onclick="switchTab(this,'all')">All</div>
+    <div onclick="switchTab(this,'friends')">Friends</div>
+    <div onclick="switchTab(this,'groups')">Groups</div>
+    <div onclick="switchTab(this,'calls')">Calls</div>
+  </div>
+
+  <div id="chatList">
+    <!-- Friend 1 -->
+    <div class="chat-list-item" onclick="openChat('Hunter the beast','https://via.placeholder.com/100?text=H')">
+      <img src="https://via.placeholder.com/100?text=H">
+      <div><div class="name">Hunter the beast</div><div class="last">Muraho boss! Waxtix irimo... <span class="badge">2</span></div></div>
+      <div class="time">10:23</div>
+    </div>
+
+    <!-- Friend 2 -->
+    <div class="chat-list-item" onclick="openChat('Keza','https://via.placeholder.com/100?text=K')">
+      <img src="https://via.placeholder.com/100?text=K">
+      <div><div class="name">Keza</div><div class="last">🎤 Voice note 0:24</div></div>
+      <div class="time">09:15</div>
+    </div>
+
+    <!-- Group -->
+    <div class="chat-list-item" onclick="openChat('Waxtix Fans - 12 members','',true)">
+      <div class="group-icon"><i class="fas fa-users"></i></div>
+      <div><div class="name">Waxtix Fans <span style="font-size:11px;color:#888">(12)</span></div><div class="last">John: Reba video nshya 🔥</div></div>
+      <div class="time">Yesterday</div>
+    </div>
+
+    <!-- Friend 3 -->
+    <div class="chat-list-item" onclick="openChat('John','https://via.placeholder.com/100?text=J')">
+      <img src="https://via.placeholder.com/100?text=J">
+      <div><div class="name">John</div><div class="last">📷 Image</div></div>
+      <div class="time">Yesterday</div>
+    </div>
+
+    <div class="chat-list-item" onclick="openChat('Aline','https://via.placeholder.com/100?text=A')">
+      <img src="https://via.placeholder.com/100?text=A">
+      <div><div class="name">Aline</div><div class="last">Tuzavugana ejo...</div></div>
+      <div class="time">Mon</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT AREA -->
+<div class="chat-area" id="chatArea">
+  <div class="chat-header">
+    <i class="fas fa-arrow-left" onclick="closeChat()" style="margin-right:10px"></i>
+    <img id="chatAvatar" src="https://via.placeholder.com/100">
+    <div>
+      <div id="chatName" style="font-weight:bold;font-size:14px">Hunter</div>
+      <div style="font-size:11px;color:#00ff88">Online</div>
+    </div>
+    <div class="actions">
+      <i class="fas fa-phone" onclick="makeCall()"></i>
+      <i class="fas fa-video" onclick="makeCall(true)"></i>
+      <i class="fas fa-ellipsis-v"></i>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="msg other">Muraho! Waxtix Chat irimo gukora neza? <span class="time">10:20</span></div>
+    <div class="msg me">Yego boss! Turimo kuyikora kuri Galaxy A32 😊 <span class="time">10:21</span></div>
+    <div class="msg other">Aha niho wagani ra ninshuti zawe Cyangwa ukaba hamagara wanakora groups and Send voice note and Image <span class="time">10:22</span></div>
+    <div class="msg other"><img src="https://via.placeholder.com/300x200/111/00e5ff?text=Image+from+friend"><span class="time">10:23</span></div>
+  </div>
+
+  <div class="input-area">
+    <button onclick="document.getElementById('imgInput').click()"><i class="fas fa-image"></i></button>
+    <input type="file" id="imgInput" accept="image/*" hidden onchange="sendImage(this)">
+    <input type="text" id="msgInput" placeholder="Andika message... Send voice note and Image" onkeypress="if(event.key==='Enter')sendMsg()">
+    <button id="voiceBtn" onclick="toggleVoice()"><i class="fas fa-microphone"></i></button>
+    <button onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+</div>
+
+<script>
+let isRecording=false;
+
+function switchTab(el,type){
+  document.querySelectorAll('.tabs div').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+  // Simple filter demo
+  if(type=='groups') document.getElementById('chatList').innerHTML='<div class="chat-list-item" onclick="openChat(\'Waxtix Fans - 12 members\',\'\',true)"><div class="group-icon"><i class="fas fa-users"></i></div><div><div class="name">Waxtix Fans (12)</div><div class="last">John: Video nshya</div></div></div>';
+  else if(type=='calls') document.getElementById('chatList').innerHTML='<div class="chat-list-item"><img src="https://via.placeholder.com/100?text=H"><div><div class="name">Hunter</div><div class="last">📞 Outgoing - 2 min ago</div></div></div>';
+  else location.reload();
+}
+
+function openChat(name, avatar, isGroup=false){
+  document.getElementById('sidebar').classList.add('hidden');
+  document.getElementById('chatArea').classList.add('active');
+  document.getElementById('chatName').innerText=name;
+  if(avatar) document.getElementById('chatAvatar').src=avatar;
+  if(isGroup) document.getElementById('chatAvatar').src='https://via.placeholder.com/100?text=G';
+}
+
+function closeChat(){
+  document.getElementById('sidebar').classList.remove('hidden');
+  document.getElementById('chatArea').classList.remove('active');
+}
+
+function sendMsg(){
+  let input=document.getElementById('msgInput');
+  let text=input.value.trim();
+  if(!text) return;
+  let msgs=document.getElementById('messages');
+  let div=document.createElement('div');
+  div.className='msg me';
+  div.innerHTML=text+'<span class="time">Now</span>';
+  msgs.appendChild(div);
+  input.value='';
+  msgs.scrollTop=msgs.scrollHeight;
+  // Auto reply
+  setTimeout(()=>{
+    let reply=document.createElement('div');
+    reply.className='msg other';
+    reply.innerHTML='Sawa! 👍<span class="time">Now</span>';
+    msgs.appendChild(reply);
+    msgs.scrollTop=msgs.scrollHeight;
+  },1000);
+}
+
+function sendImage(input){
+  let file=input.files[0];
+  if(!file) return;
+  let msgs=document.getElementById('messages');
+  let div=document.createElement('div');
+  div.className='msg me';
+  div.innerHTML='<img src="'+URL.createObjectURL(file)+'"><span class="time">Now - Image</span>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function toggleVoice(){
+  let btn=document.getElementById('voiceBtn');
+  isRecording=!isRecording;
+  if(isRecording){
+    btn.classList.add('voice-recording');
+    btn.innerHTML='<i class="fas fa-stop"></i>';
+    document.getElementById('msgInput').placeholder='🎤 Recording voice note... Tap stop';
+  } else {
+    btn.classList.remove('voice-recording');
+    btn.innerHTML='<i class="fas fa-microphone"></i>';
+    document.getElementById('msgInput').placeholder='Andika message...';
+    let msgs=document.getElementById('messages');
+    let div=document.createElement('div');
+    div.className='msg me';
+    div.innerHTML='🎤 Voice note 0:'+Math.floor(Math.random()*59).toString().padStart(2,'0')+'<span class="time">Now</span>';
+    msgs.appendChild(div);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+}
+
+function makeCall(isVideo=false){
+  if(isVideo) alert('📹 Video Call kuri '+document.getElementById('chatName').innerText+' - Camera ya A32 irimo gukora!');
+  else alert('📞 Voice Call kuri '+document.getElementById('chatName').innerText+' - Irabahamagara...');
+}
+</script>
+
+</body>
+</html>
